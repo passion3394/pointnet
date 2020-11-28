@@ -29,9 +29,8 @@ def test(model, loader, num_class=40, vote_num=1):
         points, target = data
         target = target[:, 0]
         points = points.transpose(2, 1)
-        points, target = points.cuda(), target.cuda()
         classifier = model.eval()
-        vote_pool = torch.zeros(target.size()[0],num_class).cuda()
+        vote_pool = torch.zeros(target.size()[0],num_class)
         for _ in range(vote_num):
             pred, _ = classifier(points)
             vote_pool += pred
@@ -80,10 +79,11 @@ def main(args):
 
     '''MODEL LOADING'''
     num_class = 40
-    model_name = os.listdir(experiment_dir+'/logs')[0].split('.')[0]
+    #model_name = os.listdir(experiment_dir+'/logs')[0].split('.')[0]
+    model_name = 'pointnet_cls'
     MODEL = importlib.import_module(model_name)
 
-    classifier = MODEL.get_model(num_class,normal_channel=args.normal).cuda()
+    classifier = MODEL.get_model(num_class,normal_channel=args.normal)
 
     checkpoint = torch.load(str(experiment_dir) + '/checkpoints/best_model.pth')
     classifier.load_state_dict(checkpoint['model_state_dict'])
