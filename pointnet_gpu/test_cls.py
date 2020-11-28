@@ -80,7 +80,8 @@ def main(args):
 
     '''MODEL LOADING'''
     num_class = 40
-    model_name = os.listdir(experiment_dir+'/logs')[0].split('.')[0]
+    #model_name = os.listdir(experiment_dir+'/logs')[0].split('.')[0]
+    model_name = 'pointnet_cls'
     MODEL = importlib.import_module(model_name)
 
     classifier = MODEL.get_model(num_class,normal_channel=args.normal).cuda()
